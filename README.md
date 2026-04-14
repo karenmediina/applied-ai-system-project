@@ -18,19 +18,27 @@ Replace this paragraph with your own summary of what your version does.
 ## How The System Works
 
 Explain your design in plain language.
-
-Some prompts to answer:
-
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
-
-You can include a simple diagram or bullet list if helpful.
-
 ---
+Although all components contribute to a song's power and influence, my version of the music recommendation system prioritizes the mood, bpm, danceability, acousticness, genre and artist attributes of each song. The UserProfile  stores the user's favorite_genre, favorite_mood, target_energy, and whether or not they like acoustics. Ideally, these values would be calculated from their top 10 songs list, which would be updated frequently, based on the repeats and skips a user has, in real life. My recommender will score each song in the library against the user's profile attributes to find the most similar. I plan on recommending the closest 5 songs. I anticipate creating another library of heard songs, and if a boolean like 'explore' is false then, the system may only recommend songs the user has heard before (from the heard playlist). Otherwise, the system is free to recommend from the songs that have not been heard yet as well.
 
+The steps are the following: 
+1. Loop through the songs.
+2. Calculate the total score using weights and min max scaling.
+3. Store these scores temporarily (maybe in a list of tuples like (song, score)).
+4. Sort that list by the score in descending order and return the songs.
+
+--- second version from phase 2 step 5 ---
+This recommendation engine uses a Weighted Content-Based Filtering algorithm. It evaluates every song in the library against a UserProfile using a specific point-weighting recipe designed to prioritize emotional "vibe" over technical labels.
+
+The Algorithm Recipe:
+- Mood Priority: +3.0 points for an exact mood match.
+- Tempo Sync: Up to +2.0 points based on BPM proximity (normalized).
+- Genre Alignment: +1.5 points for an exact genre match.
+- Acoustic/Danceability Finish: Up to +1.0 point each for proximity to preferred technical levels.
+- Artist Bonus: +0.5 points for familiarity.
+
+Some potential biases are that the system may ignore musically perfect matches (BPM/Energy) if the mood tag differs since mood has the highest weight, of 3 (e.g., missing an "energetic" song when looking for "happy"). The system also lacks a "Discovery" mechanism to occasionally suggest something outside the user's typical range unless the weighting is adjusted. Finally, the system is sensitive to the Min-Max scaling of BPM; if the dataset contains extreme outliers, the proximity scores for "normal" tempo songs may become too similar to distinguish.
+---
 ## Getting Started
 
 ### Setup
