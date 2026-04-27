@@ -1,100 +1,57 @@
-# 🎵 Music Recommender Simulation
+# DJ VI: Music Recommender
 
-## Project Summary
+### Project Overview
 
-In this project you will build and explain a small music recommender system.
+Have you ever wished for a whole playlist that fits a specific vibe? But couldn't find that vibe on spotify. Same. That's why I made DJ VI!
 
-Your goal is to:
+As a starting point for this project, I built upon a previous music recommender system that I worked on for Module 3 of the Codepath AI110 Course. The goal was to represent songs and a user "taste profile" as data, design a scoring rule that turns that data into recommendations and evaluate the system. 
 
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
+For this milestone, I transformed the tool into an **Applied AI System**. DJ VI uses a **RAG (Retrieval-Augmented Generation)** architecture to bridge the gap between 'mood' & 'vibes' and structured music data. Instead of searching by genre, users can input complex emotional states or aesthetic descriptions.
 
-Replace this paragraph with your own summary of what your version does.
+Traditional music search is limited by metadata tags (e.g. "Reggaeton"), but DJ VI allows for **semantic discovery**, translating a user's abstract mood into a specific, verified song recommendation.
 
----
+### **Architecture Overview**
+The system follows a **RAG Pipeline**:
+1.  **User Input:** Captures an abstract mood or "vibe" via Streamlit.
+2.  **AI Reasoner:** Gemini 2.5 Flash interprets the mood and suggests a target song/artist.
+3.  **Data Retrieval:** The system calls the **Spotify API** to verify the suggestion exists and retrieves real-world metadata, such as album Art and the Spotify URL.
+4.  **UI Generation:** The system combines the AI's "reasoning" with the API's "ground truth" into a clean user interface.
 
-## How The System Works
-
-Explain your design in plain language.
----
-Although all components contribute to a song's power and influence, my version of the music recommendation system prioritizes the mood, bpm, danceability, acousticness, genre and artist attributes of each song. The UserProfile  stores the user's favorite_genre, favorite_mood, target_energy, and whether or not they like acoustics. Ideally, these values would be calculated from their top 10 songs list, which would be updated frequently, based on the repeats and skips a user has, in real life. My recommender will score each song in the library against the user's profile attributes to find the most similar. I plan on recommending the closest 5 songs. I anticipate creating another library of heard songs, and if a boolean like 'explore' is false then, the system may only recommend songs the user has heard before (from the heard playlist). Otherwise, the system is free to recommend from the songs that have not been heard yet as well.
-
-The steps are the following: 
-1. Loop through the songs.
-2. Calculate the total score using weights and min max scaling.
-3. Store these scores temporarily (maybe in a list of tuples like (song, score)).
-4. Sort that list by the score in descending order and return the songs.
-
---- second version from phase 2 step 5 ---
-This recommendation engine uses a Weighted Content-Based Filtering algorithm. It evaluates every song in the library against a UserProfile using a specific point-weighting recipe designed to prioritize emotional "vibe" over technical labels.
-
-The Algorithm Recipe:
-- Mood Priority: +3.0 points for an exact mood match.
-- Tempo Sync: Up to +2.0 points based on BPM proximity (normalized).
-- Genre Alignment: +1.5 points for an exact genre match.
-- Acoustic/Danceability Finish: Up to +1.0 point each for proximity to preferred technical levels.
-- Artist Bonus: +0.5 points for familiarity.
-
-Some potential biases are that the system may ignore musically perfect matches (BPM/Energy) if the mood tag differs since mood has the highest weight, of 3 (e.g., missing an "energetic" song when looking for "happy"). The system also lacks a "Discovery" mechanism to occasionally suggest something outside the user's typical range unless the weighting is adjusted. Finally, the system is sensitive to the Min-Max scaling of BPM; if the dataset contains extreme outliers, the proximity scores for "normal" tempo songs may become too similar to distinguish.
 ---
 ## Getting Started
 
-### Setup
+### Setup Instructions
+1.  Clone the Repository:
+      `git clone [your-repo-link]`
+2.  Install Dependencies:
+      `python -m pip install google-genai spotipy streamlit python-dotenv`
+3.  Configure Environment Variables:
+      Create a `.env` file in the root directory with:
+      * `GEMINI_API_KEY`
+      * `SPOTIPY_CLIENT_ID`
+      * `SPOTIPY_CLIENT_SECRET`
+4.  Run the App:
+      `python -m streamlit run app.py`
 
-1. Create a virtual environment (optional but recommended):
+### **Sample Interactions**
+| User Input | AI Recommendation | System Output |
+| :--- | :--- | :--- |
+| "Nostalgic late night drive" | *Fade Into You* by Mazzy Star | Verified Spotify Link + Album Art |
+| "Dancing in the rain to Baby Miko" | *Wiggy* by Young Miko | Context-aware artist match |
+| "Studying at Green Library at 2 AM" | *Lofi hip hop beats* (Various) | Thematic aesthetic match |
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
+## Design Decisions & Trade-offs
+* Gemini <> Spotify: I chose to use Gemini for recommendation logic but forced it to pass through a Spotify API "gatekeeper."  
+    * *Trade-off:* Adds latency  because the system must call two different APIs before responding but this prevents hallucinations (AI suggesting fake songs). 
+* Prompting Strategy: I intentionally kept the prompt flexible to allow for creative "Bottom-Up" discovery.
+    * *Trade-off:* This sometimes leads to ambiguity (an example I ran into was Gemini confusing "Miko" with Japanese artists), but preserves exposure.
 
-2. Install dependencies
+### **Testing Summary & Reflection**
+The system works very well at identifying a vibe even if the description is ambiguous. Additionally, the integration between the GenAI SDK and Spotipy is stable and handles errors gracefully.
 
-```bash
-pip install -r requirements.txt
-```
+On the other hand, AI does not deal too well with polysemy most likely due to not having much background information or context. Furthermore, the cold start for Gemini and Spotify can take 1-2 seconds, which is noticeable in the UI.
 
-3. Run the app:
-
-```bash
-python -m src.main
-```
-
-### Running Tests
-
-Run the starter tests with:
-
-```bash
-pytest
-```
-
-You can add more tests in `tests/test_recommender.py`.
-
----
-
-## Experiments You Tried
-
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
-
----
-
-## Limitations and Risks
-
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+Although all projects will have more to add, I'm very happy with the introduction to APIs this project gave me and the experience of manipulating how they communicate with each other and the pipeline. Each one has its own set of restrictions but it was my job to make them play nicely for the user and control the interaction between indeterministic output and a rigid, structured database like Spotify. This reinforced my interest in the intersection of human language and computational structures. <3
 
 ---
 
