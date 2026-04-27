@@ -5,11 +5,39 @@ from dotenv import load_dotenv
 # Page Configuration
 st.set_page_config(
     page_title="DJ VI", 
-    page_icon="🎵", 
+    page_icon="🎵🎶", 
     layout="wide"
 )
 
 load_dotenv()
+
+# Custom CSS for the "DJ VI" aesthetic
+st.markdown("""
+    <style>
+    /* Style the main container cards */
+    [data-testid="column"] {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 15px;
+        border: 1px solid #e9e2f5;
+        box-shadow: 2px 2px 10px rgba(142, 124, 195, 0.05);
+    }
+    
+    /* Soft violet glow for info boxes (Reasoning) */
+    div.stAlert {
+        background-color: #f7f3ff;
+        border: 1px solid #dcd1ff;
+        color: #5b4a8c;
+        border-radius: 10px;
+    }
+
+    /* Styling the headers */
+    h1, h2, h3 {
+        color: #5b4a8c !important;
+        font-family: 'Georgia', serif; /* Gives that "Italian Summer" aesthetic */
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Custom "Coquette/Italian Summer" Styling
 # st.markdown("""
@@ -51,7 +79,7 @@ user_input = st.text_input(
 
 if st.button("Get Recommendations"):
     if user_input:
-        with st.spinner("The Oracle is curating your vibe..."):
+        with st.spinner("DJ VI is curating your vibe..."):
             results = engine.get_recommendation(user_input)
             
             if results and isinstance(results, list):
@@ -72,7 +100,7 @@ if st.button("Get Recommendations"):
                         
                         st.link_button(f"Play on Spotify", song['url'], use_container_width=True)
             else:
-                st.error("The Oracle is silent! Check your API keys or try a different vibe.")
+                st.error("DJ VI is silent! Check your API keys or try a different vibe.")
     else:
         st.warning("Please tell me your vibe first!")
 

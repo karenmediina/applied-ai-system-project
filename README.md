@@ -10,6 +10,8 @@ For this milestone, I transformed the tool into an **Applied AI System**. DJ VI 
 
 Traditional music search is limited by metadata tags (e.g. "Reggaeton"), but DJ VI allows for **semantic discovery**, translating a user's abstract mood into a specific, verified song recommendation.
 
+Loom walkthrough: https://www.loom.com/share/8a44d33aec5a40f89fa095d9efe24436
+
 ### **Architecture Overview**
 The system follows a **RAG Pipeline**:
 1.  **User Input:** Captures an abstract mood or "vibe" via Streamlit.

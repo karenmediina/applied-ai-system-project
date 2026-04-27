@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#8e7cc3" # Deep Violet for buttons and links
+backgroundColor = "#fdfaff" # Very light violet-white background
+secondaryBackgroundColor = "#f3effa" # Lighter violet for sidebars and widgets
+textColor = "#3d2b56" # Dark violet for readability
+font = "sans-serif"
