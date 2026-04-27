@@ -69,7 +69,7 @@ Write 1 to 2 paragraphs here about what you learned:
 
 ---
 
-## 7. `model_card_template.md`
+## `model_card_template.md`
 
 Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
 
